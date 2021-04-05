@@ -48,5 +48,18 @@ Invoke-Command –session $session {Get-Content C:\inetpub\mysite\index.html}
 #Create IIS Site
 Invoke-Command –session $session {New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"}
 
-Finish lab at minute 21 
+#Create NLB CLuster
+New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -DedicatedIP 10.0.0.10 -DedicatedIPSubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast
+
+Get-NlbClusterPortRule
+
+ 
+ 
+PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web  -NewNodeInterface Ethernet
+ 
+PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web3 
+-NewNodeInterface Ethernet
+ 
+PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web4 
+-NewNodeInterface Ethernet
 
