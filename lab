@@ -1,0 +1,30 @@
+#### NLB LAB ####
+
+
+### WWW1 ###
+
+  #Rename NIC
+  Get-NetAdapter -Name Ethernet | Rename-NetAdapter -NewName Private
+  Get-NetAdapter -Name "Ethernet 2" | Rename-NetAdapter -NewName NLB
+
+  #Assign IP and DNS CLient
+  New-netipaddress -ipaddress 10.0.0.9 -prefixlength 24 -defaultgateway 10.0.0.1 -interfacealias Private | Set-dnsclientserveraddress -serveradresses 10.0.0.2
+  New-netipaddress -ipaddress 10.0.0.10 -prefixlength 24 -defaultgateway 10.0.0.1 -interfacealias NLB | Set-dnsclientserveraddress -serveradresses 10.0.0.2
+
+  #Join Domain and Rename
+  add-computer -newname www1 -domainname contoso.com -domaincredential contoso\administrator -restart
+
+
+
+### WWW2 ###
+
+  #Rename NIC
+  Get-NetAdapter -Name Ethernet | Rename-NetAdapter -NewName Private
+  Get-NetAdapter -Name "Ethernet 2" | Rename-NetAdapter -NewName NLB
+
+  #Assign IP and DNS CLient
+  New-netipaddress -ipaddress 10.0.0.11 -prefixlength 24 -defaultgateway 10.0.0.1 -interfacealias Private | Set-dnsclientserveraddress -serveradresses 10.0.0.2
+  New-netipaddress -ipaddress 10.0.0.12 -prefixlength 24 -defaultgateway 10.0.0.1 -interfacealias NLB | Set-dnsclientserveraddress -serveradresses 10.0.0.2
+
+  #Join Domain and Rename
+  add-computer -newname www2 -domainname contoso.com -domaincredential contoso\administrator -restart
