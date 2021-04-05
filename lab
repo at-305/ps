@@ -45,5 +45,5 @@ Invoke-Command –session $session {hostname}
 Invoke-Command –session $session {New-Item -Path 'C:\inetpub\mysite' -ItemType Directory}
 Invoke-Command –session $session {New-Item C:\inetpub\mysite\index.html -ItemType File}
 Invoke-Command –session $session {Set-Content C:\inetpub\mysite\index.html '<html><head><title>My Site</title></head><body>This is my website</body></html>'}
-Invoke-Command –session $session {Get-Content D:\temp\test\test.html}
+Invoke-Command –session $session {Get-Content C:\inetpub\mysite\index.html}
 
