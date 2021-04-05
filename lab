@@ -46,5 +46,7 @@ Invoke-Command –session $session {Set-Content C:\inetpub\mysite\index.html '<h
 Invoke-Command –session $session {Get-Content C:\inetpub\mysite\index.html}
 
 #Create IIS Site
-New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"
+Invoke-Command –session $session {New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"}
+
+Finish lab at minute 21 and create iis site on www2
 
