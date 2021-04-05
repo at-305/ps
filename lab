@@ -52,8 +52,8 @@ Invoke-Command –session $session {New-IISSite -Name "TestSite" -BindingInforma
 Invoke-Command –computername www1 {New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast}
 Invoke-Command –computername www1 {Get-NlbClusterPortRule}
 Invoke-Command –computername www1 {Set-NlbClusterPortRule -HostName www1 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
- 
-Invoke-Command –computername www2 {Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeInterface "nlb"}
-Invoke-Command –computername www2 {Get-NlbClusterPortRule}
-Invoke-Command –computername www2 {Set-NlbClusterPortRule -HostName www2 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
+Invoke-Command –computername www1 {Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeInterface "nlb"}
+
+#Create Host Record in DNS
+Add-DnsServerResourceRecordA -Name www -ZoneName contoso.com -IPv4Address 10.0.0.150 -TimeToLive 01:00:00 -CreatePtr
  
