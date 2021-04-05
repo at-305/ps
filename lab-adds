@@ -1,8 +1,13 @@
 ##NAT1
 
-#Set IP Address, Default Gateway and Dns server address
+#Rename NIC
 Get-NetAdapter | Select Name, macaddress
+Get-NetAdapter -Name "Ethernet" | Rename-NetAdapter -NewName West
+Get-NetAdapter -Name "Ethernet 2" | Rename-NetAdapter -NewName WAN
+Get-NetAdapter -Name "Ethernet 3" | Rename-NetAdapter -NewName Public
 
+
+#Set IP Address, Default Gateway and Dns server address
 New-netipaddress -ipaddress 172.16. -prefixlength 16 -defaultgateway 172.17.0.1 -interfacealias ethernet | Set-dnsclientserveraddress -serveradresses 172.16.0.2,172.16.0.3 -interfacealias ethernet
 
 #Rename computer
