@@ -38,4 +38,12 @@ Install-WindowsFeature -name Web-Server, NLB -IncludeManagementTools
 $session=New-PsSession –ComputerName www1, www2
 Invoke-Command –session $session {Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype}
 Invoke-Command –session $session {Install-WindowsFeature -name Web-Server, NLB -IncludeManagementTools}
-Invoke-Command –session $session {Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype}
+Invoke-Command –session $session {Get-WindowsFeature -Name NLB,Web-Server}
+Invoke-Command –session $session {echo hostname}
+Invoke-Command –session $session {Test-Path C:\inetpub}
+Invoke-Command –session $session {hostname}
+Invoke-Command –session $session {New-Item -Path 'C:\inetpub\mysite' -ItemType Directory}
+Invoke-Command –session $session {New-Item C:\inetpub\mysite\index.html -ItemType File}
+Invoke-Command –session $session {Set-Content C:\inetpub\mysite\index.html '<html><head><title>My Site</title></head><body>This is my website</body></html>'}
+Invoke-Command –session $session {Get-Content D:\temp\test\test.html}
+
