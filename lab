@@ -49,17 +49,11 @@ Invoke-Command –session $session {Get-Content C:\inetpub\mysite\index.html}
 Invoke-Command –session $session {New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"}
 
 #Create NLB CLuster
-New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -DedicatedIP 10.0.0.10 -DedicatedIPSubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast
-
-Get-NlbClusterPortRule
-
+Invoke-Command –computername www1 {New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast}
+Invoke-Command –computername www1 {Get-NlbClusterPortRule}
+Invoke-Command –computername www1 {Set-NlbClusterPortRule -HostName www1 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
  
+Invoke-Command –computername www2 {New-NlbCluster -HostName www2 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast}
+Invoke-Command –computername www2 {Get-NlbClusterPortRule}
+Invoke-Command –computername www2 {Set-NlbClusterPortRule -HostName www2 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
  
-PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web  -NewNodeInterface Ethernet
- 
-PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web3 
--NewNodeInterface Ethernet
- 
-PS> Get-NlbCluster -HostName s1 | Add-NlbClusterNode -NewNodeName Web4 
--NewNodeInterface Ethernet
-
