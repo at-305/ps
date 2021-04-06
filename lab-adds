@@ -91,6 +91,8 @@ Add new Site "East"
 In Inter Site Transports, rename DefaultSiteIPLink to "WestandEast"
 Create new subnets: 172.16.0.0/21 (West), 172.16.8.0/21 (East), 172.16.16.0/30 (WAN) 
 
+#!#!#!#!# After PDC2, PDC3 and PDC4 are promoted DC's Set PDC1 and PDC3 as BridgeHead servers for IP in AD Sites/Services.
+
 
 ###############
 ## ParentDC2 ##
@@ -107,4 +109,39 @@ Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 
 #Install ADDS DC
 Install-ADDSDomainController -Credential (Get-Credential) -DomainName contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+
+
+###############
+## ParentDC3 ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.8.2 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2,172.16.0.3
+
+#Rename computer
+Rename-computer -newname pdc3 -restart
+
+#Install ADDS Role
+Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
+
+#Install ADDS DC
+Install-ADDSDomainController -Credential (Get-Credential) -DomainName contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+
+
+###############
+## ParentDC4 ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.8.3 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2
+
+#Rename computer
+Rename-computer -newname pdc4 -restart
+
+#Install ADDS Role
+Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
+
+#Install ADDS DC
+Install-ADDSDomainController -Credential (Get-Credential) -DomainName contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+
 
