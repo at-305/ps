@@ -159,5 +159,5 @@ Rename-computer -newname cdc4 -restart
 Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 
 #Install ADDS DC
-Install-ADDSDomain -DomainType ChildDomain -NewDomainName child -Credential (Get-Credential) -DomainName contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+Install-ADDSDomain -DomainType ChildDomain -NewDomainName child -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
 
