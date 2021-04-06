@@ -20,4 +20,21 @@ Install-Windowsfeature -name routing -includemanagementtools -restart
 #Rename computer
 Rename-computer -newname edns1 -restart
 
+##NAT2
 
+#Rename NIC
+Get-NetAdapter | Select Name, macaddress
+Get-NetAdapter -Name "Ethernet" | Rename-NetAdapter -NewName East
+Get-NetAdapter -Name "Ethernet 2" | Rename-NetAdapter -NewName WAN
+Get-NetAdapter -Name "Ethernet 3" | Rename-NetAdapter -NewName Public
+
+#Set IP Address
+New-netipaddress -ipaddress 172.16.8.1 -prefixlength 21 -interfacealias West
+New-netipaddress -ipaddress 172.16.16.2 -prefixlength 30 -interfacealias WAN
+
+#Set DNS Address
+Set-dnsclientserveraddress -serveraddresses 172.16.8.2,172.16.8.3 -interfacealias *
+
+#Install Routing Role
+Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype
+Install-Windowsfeature -name routing -includemanagementtools -restart
