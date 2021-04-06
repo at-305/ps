@@ -79,4 +79,15 @@ Install-ADDSForest -domainname contoso.com -safemodeadministratorpassword (conve
 #Configure DNS Reverse Lookup Zone for East/West and Wan
 Add-DnsServerPrimaryZone -NetworkID 172.16.0.0/16 -ReplicationScope Domain -DynamicUpdate Secure
 
-https://raw.githubusercontent.com/at-305/ps/main/lab
+#Register DNS CLient to auto create PTR record for pdc1 since dns was not configured
+Get-DNSResourceRecord -ZoneName 16.172.in-addr.arpa
+Register-DNSClient
+Get-DNSResourceRecord -ZoneName 16.172.in-addr.arpa
+#Note the PTR record was created.
+
+#Configure AD Sites and Services via GUI (no powershell commands?)
+Rename Default-Site to "west"
+Add new Site "East"
+In Inter Site Transports, rename DefaultSiteIPLink to "WestandEast"
+Continue lab at minute 25
+
