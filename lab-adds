@@ -1,3 +1,5 @@
+Resume lab at minute 36
+
 ##########
 ## NAT1 ##
 ##########
@@ -92,7 +94,7 @@ In Inter Site Transports, rename DefaultSiteIPLink to "WestandEast"
 Create new subnets: 172.16.0.0/21 (West), 172.16.8.0/21 (East), 172.16.16.0/30 (WAN) 
 
 #!#!#!#!# After PDC2, PDC3 and PDC4 are promoted DC's Set PDC1 and PDC3 as BridgeHead servers for IP in AD Sites/Services.
-#!#!#!#!# After CDC5 promoted as new child domain Change DNS Reverse Lookuup Zone Scope from Domain to Forest.
+#!#!#!#!# After CDC5 promoted as new child domain Change DNS Reverse Lookup Zone Scope from Domain to Forest.
 Set-DnsServerPrimaryZone -Name "16.172.in-addr.arpa" -ReplicationScope "Forest"
 
 ###############
