@@ -29,7 +29,7 @@ Get-NetAdapter -Name "Ethernet 2" | Rename-NetAdapter -NewName WAN
 Get-NetAdapter -Name "Ethernet 3" | Rename-NetAdapter -NewName Public
 
 #Set IP Address
-New-netipaddress -ipaddress 172.16.8.1 -prefixlength 21 -interfacealias West
+New-netipaddress -ipaddress 172.16.8.1 -prefixlength 21 -interfacealias East
 New-netipaddress -ipaddress 172.16.16.2 -prefixlength 30 -interfacealias WAN
 
 #Set DNS Address
