@@ -1,4 +1,4 @@
-##NAT1
+## NAT1 ##
 
 #Rename NIC
 Get-NetAdapter | Select Name, macaddress
@@ -20,7 +20,11 @@ Install-Windowsfeature -name routing -includemanagementtools -restart
 #Rename computer
 Rename-computer -newname nat1 -restart
 
-##NAT2
+#Configure NAT
+Install-RemoteAccess -InternalInterface west,wan -InternetInterface public -DeployNat
+
+
+## NAT2 ##
 
 #Rename NIC
 Get-NetAdapter | Select Name, macaddress
