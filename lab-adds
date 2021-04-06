@@ -76,5 +76,5 @@ Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 #Install ADDS FOrest
 Install-ADDSForest -domainname contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
 
-#Configure DNS
+#Configure DNS Reverse Lookup Zone for East/West and Wan
 Add-DnsServerPrimaryZone -NetworkID 172.16.0.0/16 -ReplicationScope Domain -DynamicUpdate Secure
