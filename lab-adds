@@ -78,3 +78,5 @@ Install-ADDSForest -domainname contoso.com -safemodeadministratorpassword (conve
 
 #Configure DNS Reverse Lookup Zone for East/West and Wan
 Add-DnsServerPrimaryZone -NetworkID 172.16.0.0/16 -ReplicationScope Domain -DynamicUpdate Secure
+
+https://raw.githubusercontent.com/at-305/ps/main/lab
