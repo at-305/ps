@@ -18,7 +18,7 @@ Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | ft name, displayna
 Install-Windowsfeature -name routing -includemanagementtools -restart
 
 #Rename computer
-Rename-computer -newname edns1 -restart
+Rename-computer -newname nat1 -restart
 
 ##NAT2
 
@@ -38,3 +38,6 @@ Set-dnsclientserveraddress -serveraddresses 172.16.8.2,172.16.8.3 -interfacealia
 #Install Routing Role
 Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | ft name, displayname, featuretype
 Install-Windowsfeature -name routing -includemanagementtools -restart
+
+#Rename computer
+Rename-computer -newname nat2 -restart
