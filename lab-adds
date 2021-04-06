@@ -10,9 +10,14 @@ Get-NetAdapter -Name "Ethernet 3" | Rename-NetAdapter -NewName Public
 New-netipaddress -ipaddress 172.16.0.1 -prefixlength 21 -interfacealias West
 New-netipaddress -ipaddress 172.16.16.1 -prefixlength 30 -interfacealias WAN
 
-Set-dnsclientserveraddress -serveraddresses 172.16.0.2,172.16.0.3 -interfacealias ethernet
+#Set DNS Address
+Set-dnsclientserveraddress -serveraddresses 172.16.0.2,172.16.0.3 -interfacealias *
+
+#Install Routing Role
+Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype
+Install-Windowsfeature -name routing -includemanagementtools -restart
+
 #Rename computer
 Rename-computer -newname edns1 -restart
 
-Install DNS Role
-Install-Windowsfeature -name dns -includemanagementtools -restart
+
