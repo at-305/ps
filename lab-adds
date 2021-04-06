@@ -20,9 +20,12 @@ Install-Windowsfeature -name routing -includemanagementtools -restart
 #Rename computer
 Rename-computer -newname nat1 -restart
 
-#Configure NAT
-Install-RemoteAccess -InternalInterface west,wan -InternetInterface public -DeployNat
+#Configure NAT via GUI 'routing and remote access'
+Enable and Configure > Nat > Public, WAN > Add Interface for West right click IPV4/NAT
+Install RIP > right CLick IPV4/General 'new routing protocol' RIP2. New Interface on WAN link, check all boxes on advacned tab.
 
+#Enable Ping
+Enable-NetFirewallRule -DisplayName "File and Print*"
 
 ## NAT2 ##
 
@@ -45,3 +48,10 @@ Install-Windowsfeature -name routing -includemanagementtools -restart
 
 #Rename computer
 Rename-computer -newname nat2 -restart
+
+#Configure NAT via GUI 'routing and remote access'
+Enable and Configure > Nat > Public, WAN > Add Interface for West right click IPV4/NAT
+Install RIP > right CLick IPV4/General 'new routing protocol' RIP2. New Interface on WAN link, check all boxes on advacned tab.
+
+#Enable Ping
+Enable-NetFirewallRule -DisplayName "File and Print*"
