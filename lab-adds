@@ -69,3 +69,9 @@ New-netipaddress -ipaddress 172.16.0.2 -prefixlength 21 -interfacealias Ethernet
 
 #Rename computer
 Rename-computer -newname pdc1 -restart
+
+#Install ADDS Role
+Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
+
+#Install ADDS FOrest
+Install-ADDSForest -domainname contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
