@@ -184,34 +184,6 @@ Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 Install-ADDSDomain -DomainType TreeDomain -NewDomainName adatum.com -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
 
 
-###############
-## DFS1 ##
-###############
-
-#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
-New-netipaddress -ipaddress 172.16.0.6 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.0.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2, 172.16.0.3
-
-#Rename computer
-add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName contoso.com -restart
-
-#Install DFS Role
-Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
-
-
-###############
-## DFS2 ##
-###############
-
-#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
-New-netipaddress -ipaddress 172.16.8.4 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2, 172.16.8.3
-
-#Rename computer
-add-computer -newname dfs2 -domaincredential contoso\administrator -DomainName contoso.com -restart
-
-#Install DFS Role
-Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
-
-
 
 ###############
 ## DHCP ##
@@ -240,5 +212,39 @@ Get-DhcpServerInDC
 Add-DhcpServerv4Scope -name "East" -Description "172.16.8.0/21" -StartRange 172.16.8.1 -EndRange 172.16.15.254 -SubnetMask 255.255.248.0 -State Active
 Add-DhcpServerv4ExclusionRange -ScopeID "172.16.8.0" -StartRange 172.16.8.1 -EndRange 172.16.8.100
 Set-DhcpServerv4OptionValue -ComputerName "dhcp.contoso.com" -DnsServer 172.16.8.2,172.16.8.3 -DnsDomain "contoso.com" -Router 172.16.8.1 -ScopeId "172.16.8.0"
+
+
+###############
+## DFS1 ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.0.6 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.0.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2, 172.16.0.3
+
+#Rename computer
+add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName contoso.com -restart
+
+#Install DFS Role
+Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
+
+New-DfsnRoot -Path "\\contoso.com\Public" -TargetPath "C:\dfsroots\Public" -Type DomainV2
+
+
+
+###############
+## DFS2 ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.8.4 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2, 172.16.8.3
+
+#Rename computer
+add-computer -newname dfs2 -domaincredential contoso\administrator -DomainName contoso.com -restart
+
+#Install DFS Role
+Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
+
+
+
 
 
