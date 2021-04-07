@@ -156,7 +156,7 @@ Install-ADDSDomainController -Credential (Get-Credential) -DomainName contoso.co
 New-netipaddress -ipaddress 172.16.0.4 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.0.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2, 172.16.0.3
 
 #Rename computer
-Rename-computer -newname cdc4 -restart
+Rename-computer -newname cdc5 -restart
 
 #Install ADDS Role
 Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
@@ -167,5 +167,20 @@ Install-ADDSDomain -DomainType ChildDomain -NewDomainName child -ParentDomainNam
 #!#!#!#!#After Updating Scope from Domain to Forest in DNS's Reverse Lookupzone "16.172.in-addr.arpa" on PDC1, Register DNS
 Register-DnsClient
 
+###############
+## TreeDC6 ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.0.5 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.0.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2, 172.16.0.3
+
+#Rename computer
+Rename-computer -newname tdc6 -restart
+
+#Install ADDS Role
+Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
+
+#Install ADDS DC
+Install-ADDSDomain -DomainType TreeDomain -NewDomainName tree -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
 
 
