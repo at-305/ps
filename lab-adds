@@ -227,7 +227,8 @@ add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName c
 #Install DFS Role
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
-New-DfsnRoot -Path "\\contoso.com\Public" -TargetPath "C:\dfsroots\Public" -Type DomainV2
+New-DfsnRoot -Path \contoso.com\Public -TargetPath \Public -Type DomainV2 | Format-List
+New-DfsnRoot –Path \corp.Contoso.comSales -TargetPath \contoso_fsSales -Type Domainv2 | Format-List
 
 
 
