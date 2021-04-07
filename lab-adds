@@ -194,7 +194,7 @@ New-netipaddress -ipaddress 172.16.0.6 -prefixlength 21 -interfacealias Ethernet
 #Rename computer
 add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName contoso.com -restart
 
-#Install ADDS Role
+#Install DFS Role
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
 
@@ -208,7 +208,31 @@ New-netipaddress -ipaddress 172.16.8.4 -prefixlength 21 -interfacealias Ethernet
 #Rename computer
 add-computer -newname dfs2 -domaincredential contoso\administrator -DomainName contoso.com -restart
 
-#Install ADDS Role
+#Install DFS Role
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
+
+
+###############
+## DHCP ##
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.8.7 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2, 172.16.8.3
+
+#Rename computer
+add-computer -newname dhcp -domaincredential contoso\administrator -DomainName contoso.com -restart
+
+#Install DHCP Role
+Install-Windowsfeature -name "dhcp" -includemanagementtools -restart
+
+#Add Security Groups and restart dhcp service
+netsh dhcp add securitygroups
+Restart-Service dhcpserver
+
+#Authorize DHCP in AD
+Add-DhcpServerInDC -DnsName DHCP1.corp.contoso.com -IPAddress 10.0.0.3
+
+#Confirm AD Authorized
+Get-DhcpServerInDC
 
