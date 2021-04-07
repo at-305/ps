@@ -181,6 +181,6 @@ Rename-computer -newname tdc6 -restart
 Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 
 #Install ADDS DC
-Install-ADDSDomain -DomainType TreeDomain -NewDomainName tree -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+Install-ADDSDomain -DomainType TreeDomain -NewDomainName adatum.com -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
 
 
