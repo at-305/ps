@@ -218,7 +218,7 @@ Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includema
 ###############
 
 #Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
-New-netipaddress -ipaddress 172.16.8.7 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2, 172.16.8.3
+New-netipaddress -ipaddress 172.16.8.7 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.8.1 | Set-dnsclientserveraddress -serveraddresses 172.16.8.2,172.16.8.3
 
 #Rename computer
 add-computer -newname dhcp -domaincredential contoso\administrator -DomainName contoso.com -restart
@@ -235,4 +235,10 @@ Add-DhcpServerInDC -DnsName DHCP.contoso.com -IPAddress 172.16.8.7
 
 #Confirm AD Authorized
 Get-DhcpServerInDC
+
+#Create DHCP Scopes
+Add-DhcpServerv4Scope -name "East" -Description "172.16.8.0/21" -StartRange 172.16.8.1 -EndRange 172.16.15.254 -SubnetMask 255.255.248.0 -State Active
+Add-DhcpServerv4ExclusionRange -ScopeID "East" -StartRange 172.16.8.1 -EndRange 172.16.8.100
+Set-DhcpServerv4OptionValue -ComputerName "dhcp.contoso.com" -DnsServer 172.16.8.2,172.16.8.3 -DnsDomain "contoso.com" -Router 172.16.8.1 -ScopeId "East"
+
 
