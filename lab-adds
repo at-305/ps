@@ -1,4 +1,4 @@
-Resume lab at minute 36
+Resume lab at minute 39
 
 ##########
 ## NAT1 ##
@@ -163,6 +163,9 @@ Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
 
 #Install ADDS DC
 Install-ADDSDomain -DomainType ChildDomain -NewDomainName child -ParentDomainName contoso.com -Credential (Get-Credential) -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+
+#!#!#!#!#After Updating Scope from Domain to Forest in DNS's Reverse Lookupzone "16.172.in-addr.arpa" on PDC1, Register DNS
+Register-DnsClient
 
 
 
