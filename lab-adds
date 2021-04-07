@@ -231,7 +231,7 @@ netsh dhcp add securitygroups
 Restart-Service dhcpserver
 
 #Authorize DHCP in AD
-Add-DhcpServerInDC -DnsName DHCP1.corp.contoso.com -IPAddress 10.0.0.3
+Add-DhcpServerInDC -DnsName DHCP.contoso.com -IPAddress 172.16.8.7
 
 #Confirm AD Authorized
 Get-DhcpServerInDC
