@@ -1,0 +1,65 @@
+https://hub.docker.com/editions/community/docker-ce-desktop-windows
+https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe
+
+
+# downloaded images from the docker repo
+# These images are old
+# docker pull mcr.microsoft.com/windows/servercore:1809
+# docker pull mcr.microsoft.com/windows/nanoserver:1809
+docker pull mcr.microsoft.com/windows/nanoserver:2004
+docker pull mcr.microsoft.com/windows/servercore:2004
+
+# random commands
+docker stop containername
+docker start containername
+docker attach containername
+docker image ls
+docker images
+docker container ls -a
+
+# deletes a container
+docker rm containername
+
+# deletes an image
+docker rmi imagename
+
+# create, start, and connect to docker container
+docker run -p 8888:80 --name thecontainername -h thehostname -i -t mcr.microsoft.com/windows/servercore:2004
+#Use CTRL-P CTRL-Q to detach while keeping the container running
+
+# create docker container
+docker create -p 8888:80 --name thecontainername -h thehostname -i -t mcr.microsoft.com/windows/servercore:2004
+docker start thecontainername
+docker attach thecontainername
+#Use CTRL-P CTRL-Q to detach while keeping the container running
+
+# build custom image based on downloaded image from docker repo
+Create a file called docker with the following content
+
+################# content of DockerFile #######################
+# Sample Dockerfile
+
+# Indicates that the windowsservercore image will be used as the base image.
+FROM mcr.microsoft.com/windows/servercore:2004
+
+# Metadata indicating an image maintainer.
+LABEL maintainer="jshelton@contoso.com"
+
+# Uses dism.exe to install the IIS role.
+RUN dism.exe /online /enable-feature /all /featurename:iis-webserver /NoRestart
+
+# Creates an HTML file and adds content to this file.
+RUN echo "Hello World - Dockerfile" > c:\inetpub\wwwroot\index.html
+
+# Sets a command or process that will run each time a container is run from the new image.
+CMD [ "cmd" ]
+###############################################################
+
+# build the image using the above dockerfile
+# you might have to cd into the directory that contains the dockerfile
+docker build -t iis .
+
+# now we are going to create a container based on the custom image
+docker create -p 8888:80 --name thecontainername -h thehostname -i -t iis:latest
+docker start thecontainername
+docker attach thecontainername
