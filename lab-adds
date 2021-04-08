@@ -228,7 +228,10 @@ add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName c
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
 #Failed PS Config https://techcommunity.microsoft.com/t5/storage-at-microsoft/introducing-dfs-namespaces-windows-powershell-cmdlets/ba-p/424612
-#Create DFS Namespace
+#Create DFS Namespace Path: \\contoso.com\Public Target: C:\DFSRoots\Public
+New-Item C:\DFSRootss\Public –type directory
+New-SmbShare –Name Sales –Path C:\DFSRootss\Public
+New-DfsnRoot –Path \Contoso.com\Public -TargetPath \DFSRootss\Public -Type Domainv2 | Format-List
 
 
 ###############
