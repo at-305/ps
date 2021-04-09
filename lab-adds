@@ -227,18 +227,35 @@ add-computer -newname dfs1 -domaincredential contoso\administrator -DomainName c
 #Install DFS Role
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
-#Create DFS Namespace Path of DFSR1 & 2: \\contoso.com\Public Target: C:\DFSRoots\Public
+#Create Folder and Share to be used for DFSN Root
 New-Item C:\DFSRoots\Public –type directory
 New-SmbShare –Name Public –Path C:\DFSRoots\Public
+
+#Create DFS Namespace Root
 New-DfsnRoot –Path "\\Contoso.com\Public" -TargetPath "\\dfs1.contoso.com\Public" -Type Domainv2 | Format-List
+
+#Create FOlder and Share to be used as the first DFSN Folder
 New-Item C:\Shares\Data –type directory
 New-SmbShare –Name Data –Path C:\Shares\Data
+
+#Create DFSN Folder
 New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1.contoso.com\Public\Data"
 
+#Add Root and FOlder Targets for DFS2
 Enter-PSSession -ComputerName dfs2
+
+#Create Folder and Share to be used for DFSN Root Target
 New-Item C:\DFSRoots\Public –type directory
 New-SmbShare –Name Public –Path C:\DFSRoots\Public
+
+#Create DFS Namespace Root Target
 New-DfsnRootTarget -Path "\\Contoso.com\Public" -TargetPath "\\dfs2.contoso.com\Public"
+
+#Create FOlder and Share to be used as the first DFSN Folder
+New-Item C:\Shares\Data –type directory
+New-SmbShare –Name Data –Path C:\Shares\Data
+
+#Create DFSN Folder Target
 New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2.contoso.com\Public\Data"
 
 ###############
