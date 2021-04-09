@@ -238,25 +238,22 @@ New-DfsnRoot –Path "\\Contoso.com\Public" -TargetPath "\\dfs1.contoso.com\Publ
 New-Item C:\Shares\Data –type directory
 New-SmbShare –Name Data –Path C:\Shares\Data
 
+#Modify Share Network Permissions to all
+Grant-SmbShareAccess -Name data -AccountName everyone -AccessRight Full -Force
+
 #Create DFSN Folder
 New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1.contoso.com\Public\Data"
 
 #Add Root and FOlder Targets for DFS2
-Enter-PSSession -ComputerName dfs2
 
-#Create Folder and Share to be used for DFSN Root Target
-New-Item C:\DFSRoots\Public –type directory
-New-SmbShare –Name Public –Path C:\DFSRoots\Public
+#Create Replication Topology
+New-DfsReplicationGroup -GroupName "contoso.com\public\data" | New-DfsReplicatedFolder -FolderName "Data" | Add-DfsrMember -ComputerName "dfs1","dfs2" | Format-Table dnsname,groupname -auto -wrap
+Add-DfsrConnection -GroupName "contoso.com\public\data" -SourceComputerName "dfs1" -DestinationComputerName "dfs2" | Format-Table *name -wrap -auto
+Get-DfsrConnection -GroupName "contoso.com\public\data"
+Add-DfsrConnection -GroupName "contoso.com\public\data" -SourceComputerName "dfs2" -DestinationComputerName "dfs1" | Format-Table *name -wrap -auto
+Set-DfsrMembership -GroupName "contoso.com\public\data" -FolderName "Data" -ContentPath "C:\Shares\Data" -ComputerName "dfs1" -PrimaryMember $True -Force | Format-Table *name,*path,primary* -auto -wrap
+Get-DfsrMembership -GroupName "contoso.com\public\data"
 
-#Create DFS Namespace Root Target
-New-DfsnRootTarget -Path "\\Contoso.com\Public" -TargetPath "\\dfs2.contoso.com\Public"
-
-#Create FOlder and Share to be used as the first DFSN Folder
-New-Item C:\Shares\Data –type directory
-New-SmbShare –Name Data –Path C:\Shares\Data
-
-#Create DFSN Folder Target
-New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2.contoso.com\Public\Data"
 
 ###############
 ## DFS2 ##
@@ -271,6 +268,24 @@ add-computer -newname dfs2 -domaincredential contoso\administrator -DomainName c
 #Install DFS Role
 Install-Windowsfeature -name "FS-DFS-Namespace", "FS-DFS-Replication" -includemanagementtools -restart
 
+#Create Folder and Share to be used for DFSN Root Target
+New-Item C:\DFSRoots\Public –type directory
+New-SmbShare –Name Public –Path C:\DFSRoots\Public
+
+#Create DFS Namespace Root Target
+New-DfsnRootTarget -Path "\\Contoso.com\Public" -TargetPath "\\dfs2.contoso.com\Public"
+
+#Create FOlder and Share to be used as the DFSN Folder target
+New-Item C:\Shares\Data –type directory
+New-SmbShare –Name Data –Path C:\Shares\Data
+
+#Modify Share Network Permissions to all (In effect disabling network share, requires ntfs permissions or maybe secuiryt group/gpo?)
+Grant-SmbShareAccess -Name data -AccountName everyone -AccessRight Full -Force
+
+#Create DFSN Folder Target
+New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2.contoso.com\Public\Data"
+
+#Return to DFS2 and create Replication Groups
 
 
 
