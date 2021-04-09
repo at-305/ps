@@ -232,7 +232,12 @@ New-Item C:\DFSRoots\Public –type directory
 New-SmbShare –Name Public –Path C:\DFSRoots\Public
 New-DfsnRoot –Path "\\Contoso.com\Public" -TargetPath "\\dfs1.contoso.com\Public" -Type Domainv2 | Format-List
 
-Enter-PSSession - ComputerName dfs2
+
+New-Item C:\Shares\Data –type directory
+New-SmbShare –Name Data –Path C:\Shares\Data
+New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1.contoso.com\Public\Data"
+
+Enter-PSSession -ComputerName dfs2
 New-Item C:\DFSRoots\Public –type directory
 New-SmbShare –Name Public –Path C:\DFSRoots\Public
 New-DfsnRootTarget -Path "\\Contoso.com\Public" -TargetPath "\\dfs2.contoso.com\Public"
