@@ -249,10 +249,10 @@ New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1.contoso.com
 #Create Replication Topology
 New-DfsReplicationGroup -GroupName "contoso.com\public\data" | New-DfsReplicatedFolder -FolderName "Data" | Add-DfsrMember -ComputerName "dfs1","dfs2" | Format-Table dnsname,groupname -auto -wrap
 Add-DfsrConnection -GroupName "contoso.com\public\data" -SourceComputerName "dfs1" -DestinationComputerName "dfs2" | Format-Table *name -wrap -auto
-Get-DfsrConnection -GroupName "contoso.com\public\data"
-Add-DfsrConnection -GroupName "contoso.com\public\data" -SourceComputerName "dfs2" -DestinationComputerName "dfs1" | Format-Table *name -wrap -auto
 Set-DfsrMembership -GroupName "contoso.com\public\data" -FolderName "Data" -ContentPath "C:\Shares\Data" -ComputerName "dfs1" -PrimaryMember $True -Force | Format-Table *name,*path,primary* -auto -wrap
-Get-DfsrMembership -GroupName "contoso.com\public\data"
+Set-DfsrMembership -GroupName "contoso.com\public\data" -FolderName "Data" -ContentPath "C:\Shares\Data" -ComputerName "dfs2" -Force | Format-Table *name,*path,primary* -auto -wrap
+
+
 
 
 ###############
@@ -285,7 +285,7 @@ Grant-SmbShareAccess -Name data -AccountName everyone -AccessRight Full -Force
 #Create DFSN Folder Target
 New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2.contoso.com\Public\Data"
 
-#Return to DFS2 and create Replication Groups
+#Return to DFS1 and create Replication Groups
 
 
 
