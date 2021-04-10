@@ -242,7 +242,7 @@ New-SmbShare –Name Data –Path C:\Shares\Data
 Grant-SmbShareAccess -Name data -AccountName everyone -AccessRight Full -Force
 
 #Create DFSN Folder
-New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1.contoso.com\Public\Data"
+New-DfsnFolder -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs1\Data"
 
 #Add Root and FOlder Targets for DFS2
 
@@ -283,7 +283,7 @@ New-SmbShare –Name Data –Path C:\Shares\Data
 Grant-SmbShareAccess -Name data -AccountName everyone -AccessRight Full -Force
 
 #Create DFSN Folder Target
-New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2.contoso.com\Public\Data"
+New-DfsnFolderTarget -Path "\\Contoso.com\Public\Data" -TargetPath "\\dfs2\Data"
 
 #Return to DFS1 and create Replication Groups
 
