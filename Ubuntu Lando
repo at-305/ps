@@ -1,15 +1,31 @@
+###Hypver V Ubuntu Resolution change to 1920x1080
+sudo vi /etc/default/grub
+#Modify line as follows: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=hyperv_fb:1920x1080"
+sudo update-grub
+
+###Create working directory for development sites
 cd /
 sudo mkdir sites
 sudo chmod -R a+rwx /sites/
-mkdir /sites/temp/
+mkdir /sites/temp/ && cd /sites/temp/
+
+###Docker
 sudo curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo usermod -aG docker gohan
+
+###LANDO
 wget https://files.devwithlando.io/lando-stable.deb
 sudo dpkg -i lando-stable.deb
+
+###Terminus - https://pantheon.io/docs/terminus/install
+mkdir ~/terminus && cd ~/terminus
+curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus
+chmod +x terminus
+sudo ln -s ~/terminus/terminus /usr/local/bin/terminus
+
+###NVM 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-nvm -v
+exit
 nvm install 9.11
-nvm-v
-wget https://github.com/pantheon-systems/terminus/releases/latest/download/terminus.phar -O ~/bin/terminus
-chmod +X ~/bin/terminus
+
