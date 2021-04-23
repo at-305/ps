@@ -29,3 +29,20 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 exit
 nvm install 9.11
 
+
+
+
+ssh-keygen -t ed25519 -C "gitme"
+git clone git@gitlab.com:mechacomzero/barrel-wordpress-test.git
+curl -L -o file.zip https://www.dropbox.com/sh/6v754bd7qh60nzy/AADhgAHXeJGe8E8JWZy0XcF-a?dl=1
+unzip file.zip
+mkdir /site/barrel-wordpress-test/wp-content/uploads
+tar -xvzf dev_2018-11-06T21-52-17_UTC_files.tar.gz
+mv ./files_dev/* /sites/barrel-wordpress-test/wp-content/uploads/
+mv /sites/temp/pantheon.2019-03-29-1553840919.sql.gz /sites/barrel-wordpress-test/
+lando start
+lando db-import /tmp/pantheon.2019-03-29-1553840919.sql.gz
+
+
+
+
