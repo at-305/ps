@@ -358,11 +358,13 @@ Get-Content C:\inetpub\mysite\index.html
 #Create IIS Site
 New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"
 
+#Configure AD CS
+
 #Create NLB CLuster
-New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast}
-Get-NlbClusterPortRule}
-Set-NlbClusterPortRule -HostName www1 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
-Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeInterface "nlb"}
+New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode unicast
+Get-NlbClusterPortRule
+Set-NlbClusterPortRule -HostName www1 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp
+Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeInterface "nlb"
 
 #Create Host Record in DNS
 Add-DnsServerResourceRecordA -Name www -ZoneName contoso.com -IPv4Address 10.0.0.150 -TimeToLive 01:00:00 -CreatePtr
@@ -383,7 +385,7 @@ add-computer -computername ca -domaincredential contoso\administrator -DomainNam
 #Install CA Role
 Install-WindowsFeature Adcs-Cert-Authority -includemanagementtools -restart
 
-Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 256 -HashAlgorithmName SHA256
+Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256
 
 
 
