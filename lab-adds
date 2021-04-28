@@ -302,8 +302,9 @@ New-netipaddress -ipaddress 172.16.8.9 -prefixlength 21 -defaultgateway 172.16.8
 #Join Domain and Rename
 add-computer -newname www1 -domainname contoso.com -domaincredential contoso\administrator -restart
 
-
-### WWW2 ###
+###############
+#### WWW 2 ####
+###############
 
 #Rename NIC
 Get-NetAdapter -Name Ethernet | Rename-NetAdapter -NewName NLB
@@ -315,8 +316,6 @@ New-netipaddress -ipaddress 172.16.8.10 -prefixlength 21 -defaultgateway 172.16.
 
 #Join Domain and Rename
 add-computer -newname www2 -domainname contoso.com -domaincredential contoso\administrator -restart
-
-
 
 #Install NLB and IIS
 Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype
@@ -343,6 +342,49 @@ Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeI
 #Create Host Record in DNS
 Add-DnsServerResourceRecordA -Name www -ZoneName contoso.com -IPv4Address 10.0.0.150 -TimeToLive 01:00:00 -CreatePtr
  
+#Install NLB and IIS
+Get-WindowsFeature | where{$_.InstallState -eq "Installed"} | fl pscomputername, name, displayname, featuretype
+Install-WindowsFeature -name Web-Server, NLB -IncludeManagementTools
+Get-WindowsFeature -Name NLB,Web-Server
+
+#Check inetpub and create html file
+Test-Path C:\inetpub
+hostname
+New-Item -Path 'C:\inetpub\mysite' -ItemType Directory
+New-Item C:\inetpub\mysite\index.html -ItemType File
+Set-Content C:\inetpub\mysite\index.html '<html><head><title>My Site</title></head><body>This is my website</body></html>'
+Get-Content C:\inetpub\mysite\index.html
+
+#Create IIS Site
+New-IISSite -Name "TestSite" -BindingInformation "*:80:www.contoso.com" -PhysicalPath "$env:systemdrive\inetpub\mysite"
+
+#Create NLB CLuster
+New-NlbCluster -HostName www1 -InterfaceName NLB -ClusterPrimaryIP 10.0.0.150 -SubnetMask 255.255.255.0 -ClusterName "www.contoso.com" -OperationMode multicast}
+Get-NlbClusterPortRule}
+Set-NlbClusterPortRule -HostName www1 -interfacename nlb -NewStartPort 80 -NewEndPort 80 -NewProtocol tcp}
+Get-NlbCluster -HostName www1 | Add-NlbClusterNode -NewNodeName "www2" -NewNodeInterface "nlb"}
+
+#Create Host Record in DNS
+Add-DnsServerResourceRecordA -Name www -ZoneName contoso.com -IPv4Address 10.0.0.150 -TimeToLive 01:00:00 -CreatePtr
+ 
+###############
+#### AD CS ####
+###############
+
+
+#Set IP Address, Default Gateway and Upstream DNS Server (PDC1 and PDC2)
+New-netipaddress -ipaddress 172.16.0.7 -prefixlength 21 -interfacealias Ethernet -DefaultGateway 172.16.0.1 | Set-dnsclientserveraddress -serveraddresses 172.16.0.2, 172.16.0.3
+
+#Rename/Join computer
+$hostname = hostname.exe
+rename-computer -computername $hostname -newname ca
+add-computer -computername ca -domaincredential contoso\administrator -DomainName contoso.com -restart
+
+#Install CA Role
+Install-WindowsFeature Adcs-Cert-Authority -includemanagementtools -restart
+
+Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 256 -HashAlgorithmName SHA256
+
 
 
 
