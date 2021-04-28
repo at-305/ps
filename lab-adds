@@ -386,7 +386,7 @@ add-computer -computername ca -domaincredential contoso\administrator -DomainNam
 Install-WindowsFeature Adcs-Cert-Authority -includemanagementtools -restart
 
 Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256
-
-
+Install-AdcsWebEnrollment -CAConfig "ca\contoso-ca-ca" -Force
+Install-AdcsOnlineResponder -Force
 
 
