@@ -18,9 +18,9 @@ Install-ADDSForest -domainname northwind.com -safemodeadministratorpassword (con
 Add-DnsServerPrimaryZone -NetworkID 10.0.0.0/24 -ReplicationScope Domain -DynamicUpdate Secure
 
 #Register DNS CLient to auto create PTR record for pdc1 since dns was not configured
-Get-DNSResourceRecord -ZoneName 0.0.10.in-addr.arpa
+Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 Register-DNSClient
-Get-DNSResourceRecord -ZoneName 0.0.10.in-addr.arpa
+Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 #Note the PTR record was created.
 
 #### AD CS ####
