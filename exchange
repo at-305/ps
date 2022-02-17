@@ -27,7 +27,8 @@ Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 #Install CA Role
 Install-WindowsFeature Adcs-Cert-Authority -includemanagementtools -restart
 
-Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256
+Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -CACommonName "northwind-dc-ca" -CADistinguishedNameSuffix "dc=northwind,dc=com" -ValidityPeriod Years -ValidityPeriodUnits 3 -DatabaseDirectory "C:\Windows\system32\CertLog" -LogDirectory "C:\Windows\system32\CertLog" 
+
 Install-AdcsWebEnrollment -CAConfig "ca\northwind-ca-ca" -Force
 Install-AdcsOnlineResponder -Force
 
