@@ -25,7 +25,7 @@ Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 
 #### AD CS ####
 #Install CA Role
-Install-WindowsFeature Adcs-Cert-Authority, ADCS-Online-Cert, ADCS-Enroll-Web-Pol, ADCS-Web-Enrollment -includemanagementtools -restart
+Install-WindowsFeature Adcs-Cert-Authority, ADCS-Online-Cert, ADCS-Enroll-Web-Pol, ADCS-Enroll-Web-Svc, ADCS-Web-Enrollment -includemanagementtools -restart
 
 
 ####### Can't get ADCS Configuration to work via powershell ######
