@@ -1,0 +1,46 @@
+###############
+###### DC #####
+###############
+
+#Set IP Address, Default Gateway and Upstream DNS Server (Google.com)
+New-netipaddress -ipaddress 10.0.0.2 -prefixlength 24 -interfacealias Ethernet -DefaultGateway 10.0.0.1 | Set-dnsclientserveraddress -serveraddresses 8.8.8.8,8.8.4.4
+
+#Rename computer
+Rename-computer -newname dc -restart
+
+#Install ADDS Role
+Install-Windowsfeature -name ad-domain-services -includemanagementtools -restart
+
+#Install ADDS FOrest
+Install-ADDSForest -domainname contoso.com -safemodeadministratorpassword (convertto-securestring Pa11word -AsPlainText -Force) -Force
+
+#Configure DNS Reverse Lookup Zone for East/West and Wan
+Add-DnsServerPrimaryZone -NetworkID 10.0.0.0/24 -ReplicationScope Domain -DynamicUpdate Secure
+
+#Register DNS CLient to auto create PTR record for pdc1 since dns was not configured
+Get-DNSResourceRecord -ZoneName 0.0.10.in-addr.arpa
+Register-DNSClient
+Get-DNSResourceRecord -ZoneName 0.0.10.in-addr.arpa
+#Note the PTR record was created.
+
+#### AD CS ####
+#Install CA Role
+Install-WindowsFeature Adcs-Cert-Authority -includemanagementtools -restart
+
+Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256
+Install-AdcsWebEnrollment -CAConfig "ca\northwind-ca-ca" -Force
+Install-AdcsOnlineResponder -Force
+
+##### Exchange 1 #####
+
+#Set IP Address, Default Gateway and Upstream DNS Server 
+New-netipaddress -ipaddress 10.0.0.3 -prefixlength 24 -interfacealias Ethernet -DefaultGateway 10.0.0.1 | Set-dnsclientserveraddress -serveraddresses 10.0.0.2
+
+
+
+
+
+##### Exchange 2 #####
+
+#Set IP Address, Default Gateway and Upstream DNS Server 
+New-netipaddress -ipaddress 10.0.0.4 -prefixlength 24 -interfacealias Ethernet -DefaultGateway 10.0.0.1 | Set-dnsclientserveraddress -serveraddresses 10.0.0.2
