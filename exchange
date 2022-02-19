@@ -47,7 +47,7 @@ Install-AdcsEnrollmentWebService -ApplicationPoolIdentity -CAConfig "dc.northwin
 New-netipaddress -ipaddress 10.0.0.3 -prefixlength 24 -interfacealias Ethernet -DefaultGateway 10.0.0.1 | Set-dnsclientserveraddress -serveraddresses 10.0.0.2
 
 #Join Domain and Rename
-add-computer -newname exchange01 -domainname northwind.com -domaincredential contoso\administrator -restart
+add-computer -newname exchange01 -domainname northwind.com -domaincredential northwind\administrator -restart
 
 
 
@@ -57,4 +57,4 @@ add-computer -newname exchange01 -domainname northwind.com -domaincredential con
 New-netipaddress -ipaddress 10.0.0.4 -prefixlength 24 -interfacealias Ethernet -DefaultGateway 10.0.0.1 | Set-dnsclientserveraddress -serveraddresses 10.0.0.2
 
 #Join Domain and Rename
-add-computer -newname exchange01 -domainname northwind.com -domaincredential contoso\administrator -restart
+add-computer -domainname northwind.com -domaincredential northwind\administrator -newname exchange01 -restart
