@@ -37,6 +37,8 @@ Install-AdcsOnlineResponder -Force
 
 Install-AdcsEnrollmentPolicyWebService -AuthenticationType Kerberos -SSLCertThumbprint "dc\northwind-dc-ca"
 
+Install-AdcsEnrollmentWebService -ApplicationPoolIdentity -CAConfig "dc.northwind.com\northwind-dc-ca" -SSLCertThumbprint "dc\northwind-dc-ca" -AuthenticationType Kerberos
+
 ##################################################################
 
 ##### Exchange 1 #####
