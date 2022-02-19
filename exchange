@@ -28,10 +28,15 @@ Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 Install-WindowsFeature Adcs-Cert-Authority, ADCS-Online-Cert, ADCS-Enroll-Web-Pol, ADCS-Enroll-Web-Svc, ADCS-Web-Enrollment -includemanagementtools -restart
 
 
-####### Can't get ADCS Configuration to work via powershell ######
-###Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "ECDSA_P256#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -CACommonName "northwind-dc-ca" -CADistinguishedNameSuffix "dc=northwind,dc=com" -ValidityPeriod Years -ValidityPeriodUnits 3 -DatabaseDirectory "C:\Windows\system32\CertLog" -LogDirectory "C:\Windows\system32\CertLog" 
-###Install-AdcsWebEnrollment -CAConfig "ca\northwind-dc-ca" -Force
-###Install-AdcsOnlineResponder -Force
+####### I think I go tthis to work now ######
+Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -CACommonName "northwind-dc-ca" -CADistinguishedNameSuffix "dc=northwind,dc=com" -ValidityPeriod Years -ValidityPeriodUnits 5 -DatabaseDirectory "C:\Windows\system32\CertLog" -LogDirectory "C:\Windows\system32\CertLog" -OverwriteExistingDatabase -OverwriteExistingKey -OverwriteExistingDatabase -Credential (get-credential)
+
+Install-AdcsWebEnrollment -CAConfig "dc\northwind-dc-ca" -Force
+
+Install-AdcsOnlineResponder -Force
+
+Install-AdcsEnrollmentPolicyWebService -AuthenticationType Kerberos
+
 ##################################################################
 
 ##### Exchange 1 #####
