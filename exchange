@@ -59,6 +59,15 @@ New-netipaddress -ipaddress 10.0.0.3 -prefixlength 24 -interfacealias Ethernet -
 #Join Domain and Rename
 add-computer -domainname northwind.com -domaincredential northwind\administrator -newname exchange01 -restart 
 
+#Configure Prereqs 
+https://docs.microsoft.com/en-us/exchange/plan-and-deploy/prerequisites?view=exchserver-2016
+
+#Prepare AD Schema
+https://docs.microsoft.com/en-us/exchange/plan-and-deploy/prepare-ad-and-domains?view=exchserver-2016
+
+#Install Mailbox Role
+https://docs.microsoft.com/en-us/exchange/plan-and-deploy/deploy-new-installations/install-mailbox-role?view=exchserver-2016
+
 #Configure Send Connector
 New-SendConnector -Name "To internet" -AddressSpaces * -Internet
 
