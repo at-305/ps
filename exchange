@@ -59,6 +59,11 @@ New-netipaddress -ipaddress 10.0.0.3 -prefixlength 24 -interfacealias Ethernet -
 #Join Domain and Rename
 add-computer -domainname northwind.com -domaincredential northwind\administrator -newname exchange01 -restart 
 
+#Configure Send Connector
+New-SendConnector -Name "To internet" -AddressSpaces * -Internet
+
+#Create MX Record in DNS
+Add-DnsServerResourceRecordMX -Preference 10  -Name "." -TimeToLive 01:00:00 -MailExchange "Exchange01.northwind.com" -ZoneName "northwind.com"
 
 
 ##### Exchange 2 #####
