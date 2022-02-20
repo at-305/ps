@@ -27,8 +27,7 @@ Get-DNSServerResourceRecord -ZoneName 0.0.10.in-addr.arpa
 #Install CA Role and Service on the DC
 Install-WindowsFeature Adcs-Cert-Authority, ADCS-Online-Cert, ADCS-Enroll-Web-Pol, ADCS-Enroll-Web-Svc, ADCS-Web-Enrollment -includemanagementtools -restart
 
-
-####### First command works but getting errors with the rest ######  "C:\Windows\system32\CertLog"
+#### When prompted for user/password enter northwind\administrator  and standard password
 $Credential = get-credential
 
 Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -CACommonName "northwind-dc-ca" -CADistinguishedNameSuffix "dc=northwind,dc=com" -ValidityPeriod Years -ValidityPeriodUnits 5 -DatabaseDirectory $(Join-Path $env:SystemRoot "system32\CertLog") -LogDirectory $(Join-Path $env:SystemRoot "system32\CertLog") -OverwriteExistingDatabase -OverwriteExistingKey -OverwriteExistingCAinDS -Credential $credential
@@ -40,21 +39,16 @@ Install-AdcsEnrollmentWebService -Credential $Credential
 
 ####   don't use this  #####
 Install-AdcsEnrollmentPolicyWebService -AuthenticationType Kerberos -SSLCertThumbprint "dc\northwind-dc-ca" -credential $credential
-
 Install-AdcsOnlineResponder -Force -Credential $Credential
-
 Install-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -SSLCertThumbprint "dc\northwind-dc-ca" -AuthenticationType Kerberos -Credential $Credential
+###########################
 
-###### To Uninstall Role Services #######
+###### Dont use this if you dont need to Uninstall Role Services #######
 Uninstall-AdcsCertificationAuthority -Force
 Uninstall-AdcsEnrollmentPolicyWebService -AllPolicyServers -Force
 Uninstall-AdcsEnrollmentWebService -AllEnrollmentServices -Force
 Uninstall-AdcsOnlineResponder -Force
 Uninstall-AdcsWebEnrollment -Force
-
-Uninstall-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -Force
-
-
 ##################################################################
 
 ##### Exchange 1 #####
