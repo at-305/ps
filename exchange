@@ -32,12 +32,16 @@ Install-WindowsFeature Adcs-Cert-Authority, ADCS-Online-Cert, ADCS-Enroll-Web-Po
 $Credential = get-credential
 
 Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -CACommonName "northwind-dc-ca" -CADistinguishedNameSuffix "dc=northwind,dc=com" -ValidityPeriod Years -ValidityPeriodUnits 5 -DatabaseDirectory $(Join-Path $env:SystemRoot "system32\CertLog") -LogDirectory $(Join-Path $env:SystemRoot "system32\CertLog") -OverwriteExistingDatabase -OverwriteExistingKey -OverwriteExistingCAinDS -Credential $credential
-
 Install-AdcsWebEnrollment -Force -Credential $credential
+Install-AdcsEnrollmentPolicyWebService -credential $credential
+Install-AdcsOnlineResponder -Force -Credential $Credential
+Install-AdcsEnrollmentWebService -Credential $Credential
 
+
+####   don't use this  #####
 Install-AdcsEnrollmentPolicyWebService -AuthenticationType Kerberos -SSLCertThumbprint "dc\northwind-dc-ca" -credential $credential
 
-Install-AdcsOnlineResponder -Force -Credntial $Credential
+Install-AdcsOnlineResponder -Force -Credential $Credential
 
 Install-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -SSLCertThumbprint "dc\northwind-dc-ca" -AuthenticationType Kerberos -Credential $Credential
 
