@@ -42,13 +42,13 @@ Install-AdcsOnlineResponder -Force -Credntial $Credential
 Install-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -SSLCertThumbprint "dc\northwind-dc-ca" -AuthenticationType Kerberos -Credential $Credential
 
 ###### To Uninstall Role Services #######
-Uninstall-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -Force
+Uninstall-AdcsCertificationAuthority -Force
 Uninstall-AdcsEnrollmentPolicyWebService -AllPolicyServers -Force
 Uninstall-AdcsEnrollmentWebService -AllEnrollmentServices -Force
 Uninstall-AdcsOnlineResponder -Force
 Uninstall-AdcsWebEnrollment -Force
 
-
+Uninstall-AdcsEnrollmentWebService -CAConfig "dc.northwind.com\northwind-dc-ca" -Force
 
 
 ##################################################################
